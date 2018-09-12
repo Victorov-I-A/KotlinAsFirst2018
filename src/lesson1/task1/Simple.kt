@@ -2,7 +2,8 @@
 package lesson1.task1
 
 import java.lang.Math.*
-
+const val h1 = 3600
+      val m1 = 60
 /**
  * Пример
  *
@@ -58,7 +59,7 @@ fun main(args: Array<String>) {
  * Пользователь задает время в часах, минутах и секундах, например, 8:20:35.
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
-fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * 3600 + minutes * 60 + seconds
+fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * h1 + minutes * m1 + seconds
 
 
 /**
