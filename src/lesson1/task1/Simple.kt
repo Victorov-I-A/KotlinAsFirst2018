@@ -82,7 +82,7 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * secondToHours
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
         ((sagenes * sagenesToArsin + arshins) * sagenesToVershoks + vershoks) * vershoksToMeters
-
+о
 /**
  * Тривиальная
  *
