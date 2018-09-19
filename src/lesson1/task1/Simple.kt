@@ -5,16 +5,15 @@ import java.lang.Math.pow
 import kotlin.math.*
 
 
-const val secondToHours = 3600
-const val minutesToHours = 60
-const val sagenesToArsin = 3
-const val sagenesToVershoks = 16
-const val vershoksToMeters = 4.445 / 100
-const val minToGrad = 60.0
-const val secToGrad = 3600.0
-const val gradToRadian = 180.0
-const val hoursToMinutes = 60
-const val nextDigit = 10
+const val SECOND_TO_HOURS = 3600
+const val MINUTES_TO_HOURS = 60
+const val SAGENES_TO_ARSHIN = 3
+const val SAGENES_TO_VERSHOKS = 16
+const val VERSHOKS_TO_METERS = 4.445 / 100
+const val MIN_TO_GRAD = 60.0
+const val SEC_TO_GRAD = 3600.0
+const val GRAD_TO_RADIAN = 180.0
+const val HOURS_TO_MINUTES = 60
 /**
  * Пример
  *
@@ -70,7 +69,7 @@ fun main(args: Array<String>) {
  * Пользователь задает время в часах, минутах и секундах, например, 8:20:35.
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
-fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * secondToHours + minutes * minutesToHours + seconds
+fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * SECOND_TO_HOURS + minutes * MINUTES_TO_HOURS + seconds
 
 
 /**
@@ -81,7 +80,7 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = hours * secondToHours
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
-        ((sagenes * sagenesToArsin + arshins) * sagenesToVershoks + vershoks) * vershoksToMeters
+        ((sagenes * SAGENES_TO_ARSHIN + arshins) * SAGENES_TO_VERSHOKS + vershoks) * VERSHOKS_TO_METERS
 
 /**
  * Тривиальная
@@ -89,8 +88,8 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(grad: Int, min: Int, sec: Int): Double = (grad + min / minToGrad + sec / secToGrad) / gradToRadian *
-        PI
+fun angleInRadian(grad: Int, min: Int, sec: Int): Double =
+        (grad + min / MIN_TO_GRAD + sec / SEC_TO_GRAD) / GRAD_TO_RADIAN * PI
 
 /**
  * Тривиальная
@@ -110,7 +109,7 @@ fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double {
  * Пользователь задает целое число, большее 100 (например, 3801).
  * Определить третью цифру справа в этом числе (в данном случае 8).
  */
-fun thirdDigit(number: Int): Int = number / nextDigit / nextDigit % nextDigit
+fun thirdDigit(number: Int): Int = number / 10 / 10 % 10
 
 /**
  * Простая
@@ -120,7 +119,7 @@ fun thirdDigit(number: Int): Int = number / nextDigit / nextDigit % nextDigit
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
 fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int =
-        (hoursArrive * hoursToMinutes + minutesArrive) - (hoursDepart * hoursToMinutes + minutesDepart)
+        (hoursArrive * HOURS_TO_MINUTES + minutesArrive) - (hoursDepart * HOURS_TO_MINUTES + minutesDepart)
 
 /**
  * Простая
