@@ -65,7 +65,7 @@ fun ageDescription(age: Int): String {
     val lastDigit = age % 10
     val twoLastDigit = age % 100
     return when {
-        lastDigit in 2..4 && (age > 19 || age < 5) -> "$age года"
+        lastDigit in 2..4 && twoLastDigit !in 12..14 -> "$age года"
         lastDigit == 1 && twoLastDigit != 11 -> "$age год"
         else -> "$age лет"
     }
