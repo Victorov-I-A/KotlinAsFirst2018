@@ -104,14 +104,14 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    val xx1: Boolean = kingX == rookX1
-    val xx2: Boolean = kingX == rookX2
-    val yy1: Boolean = kingY == rookY1
-    val yy2: Boolean = kingY == rookY2
+    val xx1 = kingX == rookX1
+    val xx2 = kingX == rookX2
+    val yy1 = kingY == rookY1
+    val yy2 = kingY == rookY2
     return when {
-        (xx1 || yy1) && !xx2 && !yy2 -> 1
-        (xx2 || yy2) && !xx1 && !yy1 -> 2
         (xx1 || yy1) && (xx2 || yy2) -> 3
+        (xx1 || yy1) -> 1
+        (xx2 || yy2) -> 2
         else -> 0
     }
 }
@@ -128,12 +128,12 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    val xx: Boolean = kingX == rookX
-    val yy: Boolean = kingY == rookY
+    val xx = kingX == rookX
+    val yy = kingY == rookY
     return when {
-        (xx || yy) && (abs(bishopX - kingX) != abs(bishopY - kingY)) -> 1
-        !xx && !yy && (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 2
         (xx || yy) && (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 3
+        (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 2
+        (xx || yy) -> 1
         else -> 0
     }
 }
