@@ -101,6 +101,8 @@ fun timeForHalfWay(t1: Double, v1: Double,
  * и 3, если угроза от обеих ладей.
  * Считать, что ладьи не могут загораживать друг друга
  */
+fun orOr(a: Boolean, b: Boolean): Boolean = a || b
+
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
@@ -109,9 +111,9 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
     val yy1 = kingY == rookY1
     val yy2 = kingY == rookY2
     return when {
-        (xx1 || yy1) && (xx2 || yy2) -> 3
-        (xx1 || yy1) -> 1
-        (xx2 || yy2) -> 2
+        orOr(xx1, yy1) && orOr(xx2, yy2) -> 3
+        orOr(xx1, yy1) -> 1
+        orOr(xx2, yy2) -> 2
         else -> 0
     }
 }
@@ -125,15 +127,17 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
  * и 3, если угроза есть и от ладьи и от слона.
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
+fun modulsEquality(a: Int, b: Int): Boolean = abs(a) == abs(b)
+
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
     val xx = kingX == rookX
     val yy = kingY == rookY
     return when {
-        (xx || yy) && (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 3
-        (abs(bishopX - kingX) == abs(bishopY - kingY)) -> 2
-        (xx || yy) -> 1
+        orOr(xx, yy) && modulsEquality(bishopX - kingX, bishopY - kingY) -> 3
+        modulsEquality(bishopX - kingX, bishopY - kingY) -> 2
+        orOr(xx, yy) -> 1
         else -> 0
     }
 }
