@@ -63,10 +63,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     val lastDigit = age % 10
-    val twoLastDigit = age % 100
+    val secondLastDigit = age % 100
     return when {
-        lastDigit in 2..4 && twoLastDigit !in 12..14 -> "$age года"
-        lastDigit == 1 && twoLastDigit != 11 -> "$age год"
+        lastDigit in 2..4 && secondLastDigit !in 12..14 -> "$age года"
+        lastDigit == 1 && secondLastDigit != 11 -> "$age год"
         else -> "$age лет"
     }
 }
@@ -101,19 +101,15 @@ fun timeForHalfWay(t1: Double, v1: Double,
  * и 3, если угроза от обеих ладей.
  * Считать, что ладьи не могут загораживать друг друга
  */
-fun orOr(a: Boolean, b: Boolean): Boolean = a || b
-
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    val xx1 = kingX == rookX1
-    val xx2 = kingX == rookX2
-    val yy1 = kingY == rookY1
-    val yy2 = kingY == rookY2
+    val checkmateXY1 = kingX == rookX1 || kingY == rookY1
+    val checkmateXY2 = kingX == rookX2 || kingY == rookY2
     return when {
-        orOr(xx1, yy1) && orOr(xx2, yy2) -> 3
-        orOr(xx1, yy1) -> 1
-        orOr(xx2, yy2) -> 2
+        checkmateXY1 && checkmateXY2 -> 3
+        checkmateXY1 -> 1
+        checkmateXY2 -> 2
         else -> 0
     }
 }
@@ -127,17 +123,15 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
  * и 3, если угроза есть и от ладьи и от слона.
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
-fun modulsEquality(a: Int, b: Int): Boolean = abs(a) == abs(b)
-
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    val xx = kingX == rookX
-    val yy = kingY == rookY
+    val checkmateRook = kingX == rookX || kingY == rookY
+    val checkmateBishop = abs(bishopX - kingX) == abs(bishopY - kingY)
     return when {
-        orOr(xx, yy) && modulsEquality(bishopX - kingX, bishopY - kingY) -> 3
-        modulsEquality(bishopX - kingX, bishopY - kingY) -> 2
-        orOr(xx, yy) -> 1
+        checkmateBishop && checkmateRook -> 3
+        checkmateRook -> 1
+        checkmateBishop -> 2
         else -> 0
     }
 }
