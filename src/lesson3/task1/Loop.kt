@@ -107,11 +107,13 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var k = max(m, n)
-    while (k % m != k % n) {
-        k++
+    val compositionMN = m * n
+    var divisor = 0
+    for (i in min(m, n) downTo 1) {
+        divisor = i
+        if ((m % i == 0) && (n % i == 0)) break
     }
-    return k
+    return compositionMN / divisor
 }
 
 /**
