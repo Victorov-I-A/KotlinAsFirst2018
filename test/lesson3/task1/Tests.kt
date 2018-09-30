@@ -69,7 +69,8 @@ class Tests {
         assertEquals(2, digitNumber(10))
         assertEquals(2, digitNumber(99))
         assertEquals(3, digitNumber(123))
-        assertEquals(10, digitNumber(Int.MAX_VALUE))
+        assertEquals(10, digitNumber(Int.MAX_VALUE ))
+        assertEquals(10, digitNumber(-1269511051))
     }
 
     @Test
@@ -99,6 +100,7 @@ class Tests {
         assertEquals(2089830349, lcm(23579, 88631))
         assertEquals(2022222222, lcm(2, 1011111111))
         assertEquals(2022222222, lcm(1011111111, 2))
+        assertEquals(1862637572, lcm(41708, 44659))
     }
 
     @Test
@@ -150,7 +152,7 @@ class Tests {
         assertFalse(squareBetweenExists(51, 61))
         assertFalse(squareBetweenExists(999, 1001))
         assertTrue(squareBetweenExists(152374337, 152423715))
-        assertFalse(squareBetweenExists(2147395601, Int.MAX_VALUE))
+        assertFalse(squareBetweenExists(2147395601 , Int.MAX_VALUE ))
     }
 
     @Test
@@ -207,6 +209,7 @@ class Tests {
         assertFalse(isPalindrome(3653))
         assertTrue(isPalindrome(15751))
         assertTrue(isPalindrome(24688642))
+        assertTrue(isPalindrome(305313503))
     }
 
     @Test
