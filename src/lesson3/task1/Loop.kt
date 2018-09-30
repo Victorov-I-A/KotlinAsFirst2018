@@ -165,7 +165,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (k in 1..(sqrt(m.toDouble()) + 1).toInt()) {
+    for (k in 0..(sqrt(m.toDouble()) + 1).toInt()) {
         if (k * k in m..n) return true
     }
     return false
@@ -222,7 +222,7 @@ fun sin(x: Double, eps: Double): Double {
         divisor += 2
         sign++
     }
-    return sinus
+    return if (x > 0) sinus else -sinus
 }
 
 /**
@@ -280,14 +280,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var number = n
-    while (number > 9) {
-        if (number % 10 != revert(number) % 10) return false
-        number = revert(revert(number) / 10) / 10
-    }
-    return true
-}
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя
