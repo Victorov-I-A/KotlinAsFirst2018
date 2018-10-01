@@ -134,13 +134,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var maxDivisor = n
-    do {
-        maxDivisor--
-    } while (n % maxDivisor != 0)
-    return maxDivisor
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -167,7 +161,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (k in 0..(sqrt(m.toDouble()) + 1).toInt()) {
+    for (k in 0..ceil(sqrt(m.toDouble())).toInt()) {
         if (k * k in m..n) return true
     }
     return false
@@ -216,12 +210,14 @@ fun sin(x: Double, eps: Double): Double {
     var sign = 2
     val newX = abs(x % (PI * 2))
     var sinus = newX
-    while (formula(newX, divisor) >= eps) {
+    var element = pow(newX, 3.0) / factorial(3)
+    while (element >= eps) {
         if (sign % 2 == 0)
-            sinus -= formula(newX, divisor)
+            sinus -= element
         else
-            sinus += formula(newX, divisor)
+            sinus += element
         divisor += 2
+        element *= sqr(newX) / (divisor * (divisor - 1))
         sign++
     }
     return if (x > 0) sinus else -sinus
@@ -239,12 +235,14 @@ fun cos(x: Double, eps: Double): Double {
     var sign = 2
     var cosinus = 1.0
     val newX = abs(x % (PI * 2))
-    while (formula(newX, divisor) >= eps) {
+    var element = pow(newX, 2.0) / factorial(2)
+    while (element >= eps) {
         if (sign % 2 == 0)
-            cosinus -= formula(newX, divisor)
+            cosinus -= element
         else
-            cosinus += formula(newX, divisor)
+            cosinus += element
         divisor += 2
+        element *= sqr(newX) / (divisor * (divisor - 1))
         sign++
     }
     return cosinus
@@ -264,10 +262,7 @@ fun revert(n: Int): Int {
     var lastDigit: Int
     while (oldNumber > 0) {
         lastDigit = oldNumber % 10
-        if (oldNumber < 10)
-            newNumber += lastDigit
-        else
-            newNumber = (newNumber + lastDigit) * 10
+        newNumber = newNumber * 10 + lastDigit
         oldNumber /= 10
     }
     return newNumber
@@ -294,12 +289,10 @@ fun isPalindrome(n: Int): Boolean = n == revert(n)
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var number = n / 10
-    var previousDigit = n % 10
-    var presentDigit: Int
+    val previousDigit = n % 10
     while (number != 0) {
-        presentDigit = number % 10
+        val presentDigit = number % 10
         if (presentDigit != previousDigit) return true
-        previousDigit = presentDigit
         number /= 10
     }
     return false
