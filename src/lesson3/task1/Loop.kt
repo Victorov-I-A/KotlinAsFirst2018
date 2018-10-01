@@ -161,8 +161,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (k in 0..ceil(sqrt(m.toDouble())).toInt()) {
-        if (k * k in m..n) return true
+    for (k in 0..ceil(sqrt(n.toDouble())).toInt()) {
+        if (k in ceil(sqrt(m.toDouble()))..floor(sqrt(n.toDouble()))) return true
     }
     return false
 }
@@ -203,8 +203,6 @@ fun collatzSteps(x: Int): Int {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun formula(a: Double, b: Int): Double = pow(a, b.toDouble()) / factorial(b)
-
 fun sin(x: Double, eps: Double): Double {
     var divisor = 3
     var sign = 2
