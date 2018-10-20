@@ -225,17 +225,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String {
-    var str = ""
-    var number = n
-    while (number > 1) {
-        val divisor = minDivisor(number)
-        str += "$divisor*"
-        number /= divisor
-    }
-    val length = str.length
-    return if (length != 1) str.substring(0, length - 1) else str
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -264,7 +254,7 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val mass = arrayOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-            'i', 'g', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+            'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
             'v', 'w', 'x', 'y', 'z')
     var number = n
     var str = ""
@@ -302,7 +292,7 @@ fun decimal(digits: List<Int>, base: Int): Int = digits.reversed().foldIndexed(0
  */
 fun charToInt(a: Char): Int {
     if (a in '0'..'9') return a - '0'
-    val mass = arrayOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'g', 'k',
+    val mass = arrayOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
             'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
             'y', 'z')
     var b = 10
@@ -324,7 +314,48 @@ fun decimalFromString(str: String, base: Int): Int = decimal(str.map { charToInt
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var str = ""
+    var numOfM = n / 1000
+    var numOfC = n / 100 % 10
+    var numOfX = n / 10 % 10
+    var numOfI = n % 10
+    while (numOfM > 0) {
+        str += 'M'
+        numOfM--
+    }
+    while (numOfC > 0) {
+        str += 'C'
+        numOfC--
+        if (str.filter { it == 'C' || it == 'D' } == "CCCC")
+            str = str.filter { it != 'C' } + "CD"
+        if (str.filter { it == 'C' || it == 'D' } == "CDC")
+            str = str.filter { it != 'C' && it != 'D' } + 'D'
+        if (str.filter { it == 'C' || it == 'D' }.length == 5)
+            str = str.filter { it != 'C' && it != 'D' } + "CM"
+    }
+    while (numOfX > 0) {
+        str += 'X'
+        numOfX--
+        if (str.filter { it == 'X' || it == 'L' } == "XXXX")
+            str = str.filter { it != 'X' } + "XL"
+        if (str.filter { it == 'X' || it == 'L' } == "XLX")
+            str = str.filter { it != 'X' && it != 'L' } + 'L'
+        if (str.filter { it == 'X' || it == 'L' }.length == 5)
+            str = str.filter { it != 'X' && it != 'L' } + "XC"
+    }
+    while (numOfI > 0) {
+        str += 'I'
+        if (str.filter { it == 'I' || it == 'V' } == "IIII")
+            str = str.filter { it != 'I' } + "IV"
+        if (str.filter { it == 'I' || it == 'V' } == "IVI")
+            str = str.filter { it != 'I' && it != 'V' } + 'V'
+        if (str.filter { it == 'I' || it == 'V' }.length == 5)
+            str = str.filter { it != 'I' && it != 'V' } + "IX"
+        numOfI--
+    }
+    return str
+}
 
 /**
  * Очень сложная
@@ -333,4 +364,51 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+val MASS = arrayOf("", "один", "два", "три", "четыр", "пят", "шест", "сем", "восем", "девят")
+
+fun firstDigit(n: Int): String =
+        when (n / 100) {
+            0 -> MASS[0]
+            1 -> "сто" + ' '
+            2 -> "двести" + ' '
+            3 -> "триста" + ' '
+            4 -> "четыреста" + ' '
+            else -> MASS[n / 100] + "ьсот" + ' '
+        }
+
+fun secondDigit(n: Int): String =
+        when (n % 100 / 10) {
+            0 -> MASS[0]
+            1 -> ""
+            2, 3 -> MASS[n % 100 / 10] + "дцать" + ' '
+            4 -> "сорок" + ' '
+            9 -> "девяносто" + ' '
+            else -> MASS[n % 100 / 10] + "ьдесят" + ' '
+        }
+
+fun secondAndThirdDigit(n: Int): String =
+        when {
+            n % 10 == 0 -> MASS[0]
+            n % 100 == 10 -> "десять" + ' '
+            n % 100 == 12 -> "двенадцать" + ' '
+            n % 100 in 11..19 -> MASS[n % 10] + "надцать" + ' '
+            n % 10 in 1..3 -> MASS[n % 10] + ' '
+            n % 10 == 4 -> "четыре" + ' '
+            else -> MASS[n % 10] + 'ь' + ' '
+
+        }
+
+fun russian(n: Int): String {
+    var str: String
+    var firstPart = firstDigit(n / 1000) + secondDigit(n / 1000)
+    val secondPart = firstDigit(n % 1000) + secondDigit(n % 1000) + secondAndThirdDigit(n % 1000).trim()
+    var thousand = secondAndThirdDigit(n / 1000)
+    when (thousand) {
+        "один" -> thousand = "одна тысяча"
+        "два" -> thousand = "две тысячи"
+        "три", "четыре" -> thousand += "тысячи"
+        else -> thousand += "тысяч"
+    }
+    return when {}
+
+}
