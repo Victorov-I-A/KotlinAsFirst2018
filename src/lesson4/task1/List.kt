@@ -369,32 +369,32 @@ val MASS = arrayOf("", "один", "два", "три", "четыр", "пят", "
 fun firstDigit(n: Int): String =
         when (n / 100) {
             0 -> MASS[0]
-            1 -> "сто" + ' '
-            2 -> "двести" + ' '
-            3 -> "триста" + ' '
-            4 -> "четыреста" + ' '
-            else -> MASS[n / 100] + "ьсот" + ' '
+            1 -> "сто "
+            2 -> "двести "
+            3 -> "триста "
+            4 -> "четыреста "
+            else -> MASS[n / 100] + "ьсот "
         }
 
 fun secondDigit(n: Int): String =
         when (n % 100 / 10) {
             0 -> MASS[0]
             1 -> ""
-            2, 3 -> MASS[n % 100 / 10] + "дцать" + ' '
-            4 -> "сорок" + ' '
-            9 -> "девяносто" + ' '
-            else -> MASS[n % 100 / 10] + "ьдесят" + ' '
+            2, 3 -> MASS[n % 100 / 10] + "дцать "
+            4 -> "сорок "
+            9 -> "девяносто "
+            else -> MASS[n % 100 / 10] + "ьдесят "
         }
 
 fun secondAndThirdDigit(n: Int): String =
         when {
             n % 10 == 0 -> MASS[0]
-            n % 100 == 10 -> "десять" + ' '
-            n % 100 == 12 -> "двенадцать" + ' '
-            n % 100 in 11..19 -> MASS[n % 10] + "надцать" + ' '
+            n % 100 == 10 -> "десять "
+            n % 100 == 12 -> "двенадцать "
+            n % 100 in 11..19 -> MASS[n % 10] + "надцать "
             n % 10 in 1..3 -> MASS[n % 10] + ' '
-            n % 10 == 4 -> "четыре" + ' '
-            else -> MASS[n % 10] + 'ь' + ' '
+            n % 10 == 4 -> "четыре "
+            else -> MASS[n % 10] + "ь "
 
         }
 
@@ -404,10 +404,10 @@ fun russian(n: Int): String {
             firstDigit(n % 1000) + secondDigit(n % 1000) + secondAndThirdDigit(n % 1000)
     var thousand = secondAndThirdDigit(n / 1000)
     when (thousand) {
-        "один " -> thousand = "одна тысяча" + ' '
-        "два " -> thousand = "две тысячи" + ' '
-        "три ", "четыре " -> thousand += "тысячи" + ' '
-        else -> thousand += "тысяч" + ' '
+        "один " -> thousand = "одна тысяча "
+        "два " -> thousand = "две тысячи "
+        "три ", "четыре " -> thousand += "тысячи "
+        else -> thousand += "тысяч "
     }
     return if (firstPart + thousand != "тысяч ")
         (firstPart + thousand + secondPart).trim()
