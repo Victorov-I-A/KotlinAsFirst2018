@@ -326,23 +326,23 @@ fun roman(n: Int): String {
     }
     while (numOfC > 0) {
         str += 'C'
-        numOfC--
         if (str.filter { it == 'C' || it == 'D' } == "CCCC")
             str = str.filter { it != 'C' } + "CD"
         if (str.filter { it == 'C' || it == 'D' } == "CDC")
             str = str.filter { it != 'C' && it != 'D' } + 'D'
         if (str.filter { it == 'C' || it == 'D' }.length == 5)
             str = str.filter { it != 'C' && it != 'D' } + "CM"
+        numOfC--
     }
     while (numOfX > 0) {
         str += 'X'
-        numOfX--
         if (str.filter { it == 'X' || it == 'L' } == "XXXX")
             str = str.filter { it != 'X' } + "XL"
         if (str.filter { it == 'X' || it == 'L' } == "XLX")
             str = str.filter { it != 'X' && it != 'L' } + 'L'
         if (str.filter { it == 'X' || it == 'L' }.length == 5)
             str = str.filter { it != 'X' && it != 'L' } + "XC"
+        numOfX--
     }
     while (numOfI > 0) {
         str += 'I'
@@ -399,16 +399,18 @@ fun secondAndThirdDigit(n: Int): String =
         }
 
 fun russian(n: Int): String {
-    var str: String
-    var firstPart = firstDigit(n / 1000) + secondDigit(n / 1000)
-    val secondPart = firstDigit(n % 1000) + secondDigit(n % 1000) + secondAndThirdDigit(n % 1000).trim()
+    val firstPart = firstDigit(n / 1000) + secondDigit(n / 1000)
+    val secondPart =
+            firstDigit(n % 1000) + secondDigit(n % 1000) + secondAndThirdDigit(n % 1000)
     var thousand = secondAndThirdDigit(n / 1000)
     when (thousand) {
-        "один" -> thousand = "одна тысяча"
-        "два" -> thousand = "две тысячи"
-        "три", "четыре" -> thousand += "тысячи"
-        else -> thousand += "тысяч"
+        "один " -> thousand = "одна тысяча" + ' '
+        "два " -> thousand = "две тысячи" + ' '
+        "три ", "четыре" -> thousand += "тысячи" + ' '
+        else -> thousand += "тысяч" + ' '
     }
-    return when {}
+    return if (firstPart + thousand != "тысяч ")
+        (firstPart + thousand + secondPart).trim()
+    else secondPart.trim()
 
 }
