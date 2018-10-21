@@ -373,7 +373,7 @@ fun firstDigit(n: Int): String =
             2 -> "двести "
             3 -> "триста "
             4 -> "четыреста "
-            else -> MASS[n / 100] + "ьсот"
+            else -> MASS[n / 100] + "ьсот "
         }
 
 fun secondDigit(n: Int): String =
