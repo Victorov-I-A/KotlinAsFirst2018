@@ -406,7 +406,7 @@ fun russian(n: Int): String {
     when (thousand) {
         "один " -> thousand = "одна тысяча" + ' '
         "два " -> thousand = "две тысячи" + ' '
-        "три ", "четыре" -> thousand += "тысячи" + ' '
+        "три ", "четыре " -> thousand += "тысячи" + ' '
         else -> thousand += "тысяч" + ' '
     }
     return if (firstPart + thousand != "тысяч ")
