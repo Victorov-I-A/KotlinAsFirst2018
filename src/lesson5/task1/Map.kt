@@ -96,7 +96,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val unitedMap = mapA.toMutableMap()
-    for ((key, value) in mapB) {
+    mapB.forEach { (key, value) ->
         if (unitedMap[key] != null && unitedMap[key] != value) unitedMap[key] = "${unitedMap[key]}, $value"
         if (unitedMap[key] == null) unitedMap[key] = value
     }
@@ -114,10 +114,9 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    val resultMap = mutableMapOf<Int, MutableList<String>>()
-    for ((key, value) in grades) {
-        if (resultMap.contains(value)) resultMap[value]!!.add(key)
-        else resultMap[value] = mutableListOf(key)
+    val resultMap = mutableMapOf<Int, List<String>>()
+    grades.forEach { (key, value) ->
+        resultMap[value] = ((resultMap[value] ?: listOf()) + key).sortedDescending()
     }
     return resultMap
 }
