@@ -257,16 +257,16 @@ fun convertToString(n: Int, base: Int): String {
             'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
             'v', 'w', 'x', 'y', 'z')
     var number = n
-    var str = ""
+    var str = StringBuilder()
     do {
         val balance = number % base
-        str += if (balance > 9)
-            mass[balance - 10]
+        if (balance > 9)
+            str.append(mass[balance - 10])
         else
-            balance
+            str.append(balance)
         number /= base
     } while (number > 0)
-    return str.reversed()
+    return "$str".reversed()
 }
 
 /**
