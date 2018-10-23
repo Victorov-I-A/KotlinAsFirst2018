@@ -257,7 +257,7 @@ fun convertToString(n: Int, base: Int): String {
             'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
             'v', 'w', 'x', 'y', 'z')
     var number = n
-    var str = StringBuilder()
+    val str = StringBuilder()
     do {
         val balance = number % base
         if (balance > 9)
@@ -388,8 +388,8 @@ fun secondDigit(n: Int): String =
 
 fun secondAndThirdDigit(n: Int): String =
         when {
-            n % 10 == 0 -> MASS[0]
             n % 100 == 10 -> "десять "
+            n % 10 == 0 -> MASS[0]
             n % 100 == 12 -> "двенадцать "
             n % 100 in 11..19 -> MASS[n % 10] + "надцать "
             n % 10 in 1..3 -> MASS[n % 10] + ' '
