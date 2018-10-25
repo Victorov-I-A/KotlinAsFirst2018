@@ -314,47 +314,61 @@ fun decimalFromString(str: String, base: Int): Int = decimal(str.map { charToInt
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
+fun replacement(str: String, a: Char, b: Char, c: Char): String {
+    if (str.filter { it == 'C' || it == 'D' } == "CCCC")
+        str = str.filter { it != 'C' } + "CD"
+    if (str.filter { it == 'C' || it == 'D' } == "CDC")
+        str = str.filter { it != 'C' && it != 'D' } + 'D'
+    if (str.filter { it == 'C' || it == 'D' }.length == 5)
+        str = str.filter { it != 'C' && it != 'D' } + "CM"
+}
+
 fun roman(n: Int): String {
-    var str = ""
+    val str = StringBuilder()
+    var stringC = ""
+    var stringX = ""
+    var stringI = ""
     var numOfM = n / 1000
     var numOfC = n / 100 % 10
     var numOfX = n / 10 % 10
     var numOfI = n % 10
     while (numOfM > 0) {
-        str += 'M'
+        str.append('M')
         numOfM--
     }
     while (numOfC > 0) {
-        str += 'C'
-        if (str.filter { it == 'C' || it == 'D' } == "CCCC")
-            str = str.filter { it != 'C' } + "CD"
-        if (str.filter { it == 'C' || it == 'D' } == "CDC")
-            str = str.filter { it != 'C' && it != 'D' } + 'D'
-        if (str.filter { it == 'C' || it == 'D' }.length == 5)
-            str = str.filter { it != 'C' && it != 'D' } + "CM"
+        stringC += 'C'
+        if (stringC.filter { it == 'C' || it == 'D' } == "CCCC")
+            stringC = stringC.filter { it != 'C' } + "CD"
+        if (stringC.filter { it == 'C' || it == 'D' } == "CDC")
+            stringC = stringC.filter { it != 'C' && it != 'D' } + 'D'
+        if (stringC.filter { it == 'C' || it == 'D' }.length == 5)
+            stringC = stringC.filter { it != 'C' && it != 'D' } + "CM"
         numOfC--
     }
+    str.append(stringC)
     while (numOfX > 0) {
-        str += 'X'
-        if (str.filter { it == 'X' || it == 'L' } == "XXXX")
-            str = str.filter { it != 'X' } + "XL"
-        if (str.filter { it == 'X' || it == 'L' } == "XLX")
-            str = str.filter { it != 'X' && it != 'L' } + 'L'
-        if (str.filter { it == 'X' || it == 'L' }.length == 5)
-            str = str.filter { it != 'X' && it != 'L' } + "XC"
+        stringX += 'X'
+        if (stringX.filter { it == 'X' || it == 'L' } == "XXXX")
+            stringX = stringX.filter { it != 'X' } + "XL"
+        if (stringX.filter { it == 'X' || it == 'L' } == "XLX")
+            stringX = stringX.filter { it != 'X' && it != 'L' } + 'L'
+        if (stringX.filter { it == 'X' || it == 'L' }.length == 5)
+            stringX = stringX.filter { it != 'X' && it != 'L' } + "XC"
         numOfX--
     }
+    str.append(stringX)
     while (numOfI > 0) {
-        str += 'I'
-        if (str.filter { it == 'I' || it == 'V' } == "IIII")
-            str = str.filter { it != 'I' } + "IV"
-        if (str.filter { it == 'I' || it == 'V' } == "IVI")
-            str = str.filter { it != 'I' && it != 'V' } + 'V'
-        if (str.filter { it == 'I' || it == 'V' }.length == 5)
-            str = str.filter { it != 'I' && it != 'V' } + "IX"
+        stringI += 'I'
+        if (stringI.filter { it == 'I' || it == 'V' } == "IIII")
+            stringI = stringI.filter { it != 'I' } + "IV"
+        if (stringI.filter { it == 'I' || it == 'V' } == "IVI")
+            stringI = stringI.filter { it != 'I' && it != 'V' } + 'V'
+        if (stringI.filter { it == 'I' || it == 'V' }.length == 5)
+            stringI = stringI.filter { it != 'I' && it != 'V' } + "IX"
         numOfI--
     }
-    return str
+    return "${str.append(stringI)}"
 }
 
 /**
