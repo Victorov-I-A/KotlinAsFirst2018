@@ -314,13 +314,15 @@ fun decimalFromString(str: String, base: Int): Int = decimal(str.map { charToInt
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun replacement(str: String, a: Char, b: Char, c: Char): String {
-    if (str.filter { it == 'C' || it == 'D' } == "CCCC")
-        str = str.filter { it != 'C' } + "CD"
-    if (str.filter { it == 'C' || it == 'D' } == "CDC")
-        str = str.filter { it != 'C' && it != 'D' } + 'D'
-    if (str.filter { it == 'C' || it == 'D' }.length == 5)
-        str = str.filter { it != 'C' && it != 'D' } + "CM"
+fun replacement(strSourse: String, CharA: Char, CharB: Char, CharC: Char): String {     //* Заменяем единицы на
+    var str = strSourse                                                          //* 4, 5 и 9
+    if (str.filter { it == CharA || it == CharB } == "$CharA$CharA$CharA$CharA")
+        str = str.filter { it != CharA } + "$CharA$CharB"
+    if (str.filter { it == CharA || it == CharB } == "$CharA$CharB$CharA")
+        str = str.filter { it != CharA && it != CharB } + CharB
+    if (str.filter { it == CharA || it == CharB }.length == 5)
+        str = str.filter { it != CharA && it != CharB } + "$CharA$CharC"
+    return str
 }
 
 fun roman(n: Int): String {
@@ -338,34 +340,19 @@ fun roman(n: Int): String {
     }
     while (numOfC > 0) {
         stringC += 'C'
-        if (stringC.filter { it == 'C' || it == 'D' } == "CCCC")
-            stringC = stringC.filter { it != 'C' } + "CD"
-        if (stringC.filter { it == 'C' || it == 'D' } == "CDC")
-            stringC = stringC.filter { it != 'C' && it != 'D' } + 'D'
-        if (stringC.filter { it == 'C' || it == 'D' }.length == 5)
-            stringC = stringC.filter { it != 'C' && it != 'D' } + "CM"
+        stringC = replacement(stringC, 'C', 'D', 'M')
         numOfC--
     }
     str.append(stringC)
     while (numOfX > 0) {
         stringX += 'X'
-        if (stringX.filter { it == 'X' || it == 'L' } == "XXXX")
-            stringX = stringX.filter { it != 'X' } + "XL"
-        if (stringX.filter { it == 'X' || it == 'L' } == "XLX")
-            stringX = stringX.filter { it != 'X' && it != 'L' } + 'L'
-        if (stringX.filter { it == 'X' || it == 'L' }.length == 5)
-            stringX = stringX.filter { it != 'X' && it != 'L' } + "XC"
+        stringX = replacement(stringX, 'X', 'L', 'C')
         numOfX--
     }
     str.append(stringX)
     while (numOfI > 0) {
         stringI += 'I'
-        if (stringI.filter { it == 'I' || it == 'V' } == "IIII")
-            stringI = stringI.filter { it != 'I' } + "IV"
-        if (stringI.filter { it == 'I' || it == 'V' } == "IVI")
-            stringI = stringI.filter { it != 'I' && it != 'V' } + 'V'
-        if (stringI.filter { it == 'I' || it == 'V' }.length == 5)
-            stringI = stringI.filter { it != 'I' && it != 'V' } + "IX"
+        stringI = replacement(stringI, 'I', 'V', 'X')
         numOfI--
     }
     return "${str.append(stringI)}"
