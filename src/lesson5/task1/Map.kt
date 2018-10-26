@@ -21,7 +21,7 @@ fun shoppingListCost(
         }
     }
 
-    return totalCos
+    return totalCost
 }
 
 /**
