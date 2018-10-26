@@ -114,9 +114,12 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    val resultMap = mutableMapOf<Int, List<String>>()
+    val resultMap = mutableMapOf<Int, MutableList<String>>()
     grades.forEach { (key, value) ->
-        resultMap[value] = ((resultMap[value] ?: listOf()) + key).sortedDescending()
+        resultMap.getOrPut(value, ::mutableListOf) += key
+    }
+    resultMap.forEach { (key, value) ->
+        resultMap[key] = value.sortedDescending().toMutableList()
     }
     return resultMap
 }
@@ -132,10 +135,8 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((key, value) in a) {
-        if (b.contains(key) && b[key] == value)
-            continue
-        else
+    a.forEach { (key, value) ->
+        if (b[key] != value)
             return false
     }
     return true
@@ -210,14 +211,20 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit = TODO()
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
+    b.forEach { (key, value) -> if (a[key] == value) a.remove(key) }
+}
 
 /**
  * Простая
  *
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
+    val finalList = mutableListOf<String>()
+    a.forEach { if (b.contains(it)) finalList += it }
+    return finalList.toSet().toList()
+}
 
 /**
  * Средняя
@@ -228,7 +235,11 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    if (chars.isEmpty()) return false
+    chars.forEach { if (!word.contains(it)) return false }
+    return true
+}
 
 /**
  * Средняя
@@ -242,7 +253,16 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
+    list.forEach {
+        if (map.contains(it))
+            map[it] = map[it]!! + 1
+        else
+            map[it] = 1
+    }
+    return map.filter { (_, value) -> value != 1 }
+}
 
 /**
  * Средняя
