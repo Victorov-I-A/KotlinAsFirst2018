@@ -152,7 +152,24 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val mapWithRepeat = mutableMapOf<String, Int>()
+    val resultMap = mutableMapOf<String, Double>()
+    stockPrices.forEach { (stock, price) ->
+        if (resultMap.contains(stock) && mapWithRepeat.contains(stock)) {
+            resultMap[stock] = resultMap[stock]!! + price
+            mapWithRepeat[stock] = mapWithRepeat[stock]!! + 1
+        } else {
+            resultMap[stock] = price
+            mapWithRepeat[stock] = 1
+        }
+
+    }
+    resultMap.forEach { (stock, price) ->
+        resultMap[stock] = price / mapWithRepeat[stock]!!
+    }
+    return resultMap
+}
 
 /**
  * Средняя
@@ -211,7 +228,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     b.forEach { (key, value) -> if (a[key] == value) a.remove(key) }
 }
 
