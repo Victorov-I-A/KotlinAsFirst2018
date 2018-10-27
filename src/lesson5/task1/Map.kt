@@ -268,7 +268,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
         word == "" -> return true
 
     }
-    chars.forEach { if (!word.contains(it)) return false }
+    word.forEach { if (!chars.contains(it)) return false }
     return true
 }
 
@@ -305,16 +305,17 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val firstSet = mutableSetOf<Char>()
-    val secondSet = mutableSetOf<Char>()
+    val firstList = mutableListOf<Char>()
+    val secondList = mutableListOf<Char>()
     for (i in 0 until words.size - 1) {
-        firstSet.clear()
-        words[i].forEach { firstSet.add(it) }
+        firstList.clear()
+        words[i].forEach { firstList.add(it) }
         for (j in i + 1 until words.size) {
-            secondSet.clear()
-            words[j].forEach { secondSet.add(it) }
-            if (firstSet.intersect(secondSet) == firstSet ||
-                    firstSet.intersect(secondSet) == secondSet) return true
+            secondList.clear()
+            words[j].forEach { secondList.add(it) }
+            if (firstList.intersect(secondList).sortedDescending() == firstList.sortedDescending() ||
+                    firstList.intersect(secondList).sortedDescending() == secondList.sortedDescending())
+                return true
         }
     }
     return false
