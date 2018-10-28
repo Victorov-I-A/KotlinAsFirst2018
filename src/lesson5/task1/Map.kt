@@ -260,7 +260,8 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
         chars.isEmpty() -> return false
         word == "" -> return true
     }
-    word.toLowerCase().forEach { if (!chars.contains(it.toLowerCase())) return false }
+    val string = chars.joinToString { "${it.toLowerCase()}" }
+    word.toLowerCase().forEach { if (!string.contains(it)) return false }
     return true
 }
 
