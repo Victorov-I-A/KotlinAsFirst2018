@@ -215,7 +215,19 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val resultMap = friends.toMutableMap()
+    val allPeople = mutableSetOf<String>()
+    friends.forEach { (keyFirst, valueFirst) ->
+        allPeople += valueFirst
+        friends.forEach { (keySecond, valueTwo) ->
+            if (resultMap[keyFirst]!!.contains(keySecond))
+                resultMap[keyFirst] = (resultMap[keyFirst] ?: emptySet()) + valueTwo - keyFirst
+        }
+    }
+    allPeople.forEach { if (resultMap[it] == null) resultMap[it] = emptySet() }
+    return resultMap
+}
 
 /**
  * Простая
