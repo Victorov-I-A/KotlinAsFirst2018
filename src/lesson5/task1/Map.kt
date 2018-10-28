@@ -136,8 +136,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
     a.forEach { (key, value) ->
-        if (b[key] != value)
-            return false
+        if (b[key] != value) return false
     }
     return true
 }
@@ -156,14 +155,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val mapWithRepeat = mutableMapOf<String, Int>()
     val resultMap = mutableMapOf<String, Double>()
     stockPrices.forEach { (stock, price) ->
-        if (resultMap.contains(stock) && mapWithRepeat.contains(stock)) {
-            resultMap[stock] = resultMap[stock]!! + price
-            mapWithRepeat[stock] = mapWithRepeat[stock]!! + 1
-        } else {
-            resultMap[stock] = price
-            mapWithRepeat[stock] = 1
-        }
-
+        resultMap[stock] = (resultMap[stock] ?: 0.0) + price
+        mapWithRepeat[stock] = (mapWithRepeat[stock] ?: 0) + 1
     }
     resultMap.forEach { (stock, price) ->
         resultMap[stock] = price / mapWithRepeat[stock]!!
@@ -266,9 +259,8 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     when {
         chars.isEmpty() -> return false
         word == "" -> return true
-
     }
-    word.forEach { if (!chars.contains(it)) return false }
+    word.toLowerCase().forEach { if (!chars.contains(it.toLowerCase())) return false }
     return true
 }
 
@@ -287,10 +279,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
     list.forEach {
-        if (map.contains(it))
-            map[it] = map[it]!! + 1
-        else
-            map[it] = 1
+        map[it] = (map[it] ?: 0) + 1
     }
     return map.filter { (_, value) -> value != 1 }
 }
@@ -305,18 +294,10 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val firstList = mutableListOf<Char>()
-    val secondList = mutableListOf<Char>()
-    for (i in 0 until words.size - 1) {
-        firstList.clear()
-        words[i].forEach { firstList.add(it) }
-        for (j in i + 1 until words.size) {
-            secondList.clear()
-            words[j].forEach { secondList.add(it) }
-            if (firstList.intersect(secondList).sortedDescending() == firstList.sortedDescending() ||
-                    firstList.intersect(secondList).sortedDescending() == secondList.sortedDescending())
-                return true
-        }
+    val map = mutableMapOf<String, List<Char>>()
+    words.forEach {
+        if (!map.containsValue(it.toList().sorted())) map[it] = it.toList().sorted()
+        else return true
     }
     return false
 }
