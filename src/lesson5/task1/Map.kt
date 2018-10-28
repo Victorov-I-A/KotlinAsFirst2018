@@ -222,8 +222,9 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         allPeople += valueFirst
         friends.forEach { (keySecond, valueTwo) ->
             if (resultMap[keyFirst]!!.contains(keySecond))
-                resultMap[keyFirst] = (resultMap[keyFirst] ?: emptySet()) + valueTwo - keyFirst
+                resultMap[keyFirst] = (resultMap[keyFirst] ?: emptySet()) + valueTwo
         }
+        resultMap[keyFirst] = resultMap[keyFirst]!! - keyFirst
     }
     allPeople.forEach { if (resultMap[it] == null) resultMap[it] = emptySet() }
     return resultMap
