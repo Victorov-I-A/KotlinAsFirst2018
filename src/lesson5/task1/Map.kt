@@ -257,8 +257,8 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     when {
-        chars.isEmpty() -> return false
         word == "" -> return true
+        chars.isEmpty() -> return false
     }
     val string = chars.joinToString { "${it.toLowerCase()}" }
     word.toLowerCase().forEach { if (!string.contains(it)) return false }
