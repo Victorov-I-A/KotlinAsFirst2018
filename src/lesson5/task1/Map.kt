@@ -223,7 +223,7 @@ fun oneWaveOfHandshakes(friends: Map<String, Set<String>>, set: Set<String>): Se
 
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val resultMap = friends.toMutableMap()
-    resultMap.forEach { (key, value) ->
+    friends.forEach { (key, value) ->
         var variableValue = value
         var previousValue: MutableSet<String>
         do {
