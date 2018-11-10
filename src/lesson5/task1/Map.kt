@@ -154,12 +154,11 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val mapWithRepeat = mutableMapOf<String, Int>()
     val resultMap = mutableMapOf<String, Double>()
-    stockPrices.forEach { (stock, price) ->
-        resultMap[stock] = (resultMap[stock] ?: 0.0) + price
+    stockPrices.forEach { (stock, _) ->
         mapWithRepeat[stock] = (mapWithRepeat[stock] ?: 0) + 1
     }
-    resultMap.forEach { (stock, price) ->
-        resultMap[stock] = price / mapWithRepeat[stock]!!
+    stockPrices.forEach { (stock, price) ->
+        resultMap[stock] = (resultMap[stock] ?: 0.0) + price / mapWithRepeat[stock]!!
     }
     return resultMap
 }
@@ -393,12 +392,13 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     }
     fun findAns(k: Int, s: Int) {
         if (doubleArray[k][s] == 0)
-            return if (doubleArray[k - 1][s] == doubleArray[k][s])
-                findAns(k - 1, s)
-            else {
-                findAns(k - 1, s - treasures.values.toList()[k - 1].first)
-                resultSet += treasures.keys.toList()[k - 1]
-            }
+            return
+        if (doubleArray[k - 1][s] == doubleArray[k][s])
+            findAns(k - 1, s)
+        else {
+            findAns(k - 1, s - treasures.values.toList()[k - 1].first)
+            resultSet += treasures.keys.toList()[k - 1]
+        }
     }
     findAns(treasures.size, capacity)
     return resultSet
