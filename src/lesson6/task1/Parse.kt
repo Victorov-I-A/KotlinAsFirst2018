@@ -71,18 +71,19 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO() /* {
+fun dateStrToDigit(str: String): String {
+    if (!str.matches(Regex("""(\d|\d\d)\s\S+\s(\d{4})"""))) return ""
     val arrayOfMonths = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
             "сентября", "октября", "ноября", "декабря")
     val inputData = str.split(" ")
     val day = inputData[0].toInt()
     val year = inputData[2].toInt()
-    if (!arrayOfMonths.contains(inputData[1])) return ""
+    if (!arrayOfMonths.contains(inputData[1]) || day == 0) return ""
     val month = arrayOfMonths.indexOfFirst { it == inputData[1] } + 1
-    if (year < 0 || day > daysInMonth(month, year)) return ""
-    return String.format("%02d.%02d.%04d", day, month, year)
+    if (day > daysInMonth(month, year)) return ""
+    return String.format("%02d.%02d.%d", day, month, year)
 }
-*/
+
 /**
  * Средняя
  *
@@ -93,7 +94,17 @@ fun dateStrToDigit(str: String): String = TODO() /* {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    if (!digital.matches(Regex("""\d\d\.\d\d\.(\d{4})"""))) return ""
+    val arrayOfMonths = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
+            "сентября", "октября", "ноября", "декабря")
+    val inputData = digital.split(".")
+    val day = inputData[0].toInt()
+    val month = inputData[1].toInt()
+    val year = inputData[2].toInt()
+    if (day > daysInMonth(month, year) || month > 12 || month == 0) return ""
+    return String.format("%d ${arrayOfMonths[month - 1]} %d", day, year)
+}
 
 /**
  * Средняя
@@ -107,7 +118,12 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val resultStr = StringBuilder()
+    if (!phone.matches(Regex("""(\+)?(\d+)?\s+(\(\d+\))?(\d|\-|\s)*"""))) return ""
+    phone.forEach { if (it in '0'..'9' || it == '+') resultStr.append(it) }
+    return "$resultStr"
+}
 
 /**
  * Средняя
@@ -119,7 +135,11 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    if (!jumps.matches(Regex("""(\d+(\s|\%|\-)*)*"""))) return -1
+    val listJumps = jumps.split(" ")
+    return listJumps.filter { it != "-" && it != "%" }.maxBy { it.toInt() }!!.toInt()
+}
 
 /**
  * Сложная
@@ -131,7 +151,15 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    if (!jumps.matches(Regex("""(\d+\s(\%|\-|\+)*(\s)?)*"""))) return -1
+    var resultNumber = -1
+    for (element in Regex("""\d+\s(\%+)?\+""").findAll(jumps)) {
+        val number = element.value.filter { it in '0'..'9' }.toInt()
+        if (resultNumber < number) resultNumber = number
+    }
+    return resultNumber
+}
 
 /**
  * Сложная
@@ -142,7 +170,13 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val e = IllegalArgumentException("class.java")
+    if (!expression.matches(Regex("""(\d+\s(\-|\+))*"""))) throw e
+    return Regex("""(?<=\-)\s(?=\d+)""").replace(expression, "")
+            .split(" ").map { it.toInt() }.sumBy { it }
+}
+
 
 /**
  * Сложная

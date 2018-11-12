@@ -397,7 +397,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             findAns(k - 1, s)
         else {
             findAns(k - 1, s - treasures.values.toList()[k - 1].first)
-            resultSet += treasures.keys.toList()[k - 1]
+            resultSet.add(treasures.keys.toList()[k - 1])
         }
     }
     findAns(treasures.size, capacity)

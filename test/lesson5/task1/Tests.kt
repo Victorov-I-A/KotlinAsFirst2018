@@ -328,6 +328,13 @@ class Tests {
                         450
                 )
         )
+        assertEquals(
+                setOf("3"),
+                bagPacking(
+                        mapOf("3" to (2 to 391), "10" to (2 to 149)),
+                        2
+                )
+        )
     }
 
     // TODO: map task tests
