@@ -72,7 +72,7 @@ fun main(args: Array<String>) {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    if (!str.matches(Regex("""(\d|\d\d)\s\S+\s(\d{4})"""))) return ""
+    if (!str.matches(Regex("""(\d|\d\d)\s\S+\s(\d+)"""))) return ""
     val arrayOfMonths = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
             "сентября", "октября", "ноября", "декабря")
     val inputData = str.split(" ")
@@ -95,7 +95,7 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    if (!digital.matches(Regex("""\d\d\.\d\d\.(\d{4})"""))) return ""
+    if (!digital.matches(Regex("""\d\d\.\d\d\.(\d+)"""))) return ""
     val arrayOfMonths = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
             "сентября", "октября", "ноября", "декабря")
     val inputData = digital.split(".")
@@ -120,7 +120,7 @@ fun dateDigitToStr(digital: String): String {
  */
 fun flattenPhoneNumber(phone: String): String {
     val resultStr = StringBuilder()
-    if (!phone.matches(Regex("""(\+)?(\d+)?\s+(\(\d+\))?(\d|\-|\s)*"""))) return ""
+    if (!phone.matches(Regex("""(\+)?(\d+\s+)?(\(\d+\))?(\d|-|\s)*"""))) return ""
     phone.forEach { if (it in '0'..'9' || it == '+') resultStr.append(it) }
     return "$resultStr"
 }
@@ -136,8 +136,8 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+(\s|\%|\-)*)*"""))) return -1
-    val listJumps = jumps.split(" ")
+    if (!jumps.matches(Regex("""(\d+(\s|%|-)*)*"""))) return -1
+    val listJumps = jumps.split(Regex("""\s+"""))
     return listJumps.filter { it != "-" && it != "%" }.maxBy { it.toInt() }!!.toInt()
 }
 
@@ -152,9 +152,9 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+\s(\%|\-|\+)*(\s)?)*"""))) return -1
+    if (!jumps.matches(Regex("""(\d+\s((%+)?\+|(%+)?-|%+)(\s)?)*"""))) return -1
     var resultNumber = -1
-    for (element in Regex("""\d+\s(\%+)?\+""").findAll(jumps)) {
+    for (element in Regex("""\d+\s(%+)?\+""").findAll(jumps)) {
         val number = element.value.filter { it in '0'..'9' }.toInt()
         if (resultNumber < number) resultNumber = number
     }
@@ -172,8 +172,8 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val e = IllegalArgumentException("class.java")
-    if (!expression.matches(Regex("""(\d+(\s(\-|\+)\s)?)+"""))) throw e
-    return Regex("""(?<=\-)\s(?=\d+)|(\+\s)""").replace(expression, "")
+    if (!expression.matches(Regex("""(\d+(\s[-+]\s)?)+"""))) throw e
+    return Regex("""(?<=-)\s(?=\d+)|(\+\s)""").replace(expression, "")
             .split(" ").map { it.toInt() }.sumBy { it }
 }
 
