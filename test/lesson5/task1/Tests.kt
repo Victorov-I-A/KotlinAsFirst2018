@@ -331,7 +331,7 @@ class Tests {
         assertEquals(
                 setOf("3"),
                 bagPacking(
-                        mapOf("3" to (2 to 391), "10" to (2 to 149)),
+                        mapOf("3" to (2 to 391), "10" to (2 to 149), "4" to (76 to 76)),
                         2
                 )
         )
