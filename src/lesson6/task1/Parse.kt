@@ -72,15 +72,15 @@ fun main(args: Array<String>) {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    if (!str.matches(Regex("""(\d|\d\d)\s\S+\s(\d+)"""))) return ""
+    if (!str.matches(Regex("""\d{1,2}\s\S+\s(\d+)"""))) return ""
     val arrayOfMonths = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
             "сентября", "октября", "ноября", "декабря")
     val inputData = str.split(" ")
     val day = inputData[0].toInt()
     val year = inputData[2].toInt()
-    if (!arrayOfMonths.contains(inputData[1]) || day == 0) return ""
+    if (!arrayOfMonths.contains(inputData[1])) return ""
     val month = arrayOfMonths.indexOfFirst { it == inputData[1] } + 1
-    if (day > daysInMonth(month, year)) return ""
+    if (day !in 1..daysInMonth(month, year)) return ""
     return String.format("%02d.%02d.%d", day, month, year)
 }
 
@@ -102,7 +102,7 @@ fun dateDigitToStr(digital: String): String {
     val day = inputData[0].toInt()
     val month = inputData[1].toInt()
     val year = inputData[2].toInt()
-    if (day > daysInMonth(month, year) || month > 12 || month == 0) return ""
+    if (day !in 1..daysInMonth(month, year) || month !in 1..12) return ""
     return String.format("%d ${arrayOfMonths[month - 1]} %d", day, year)
 }
 
@@ -136,9 +136,8 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+(\s|%|-)*)*"""))) return -1
-    val listJumps = jumps.split(Regex("""\s+"""))
-    return listJumps.filter { it != "-" && it != "%" }.maxBy { it.toInt() }!!.toInt()
+    if (!jumps.matches(Regex("""([\s%\-]+)?(\d+[\s%\-]*)+"""))) return -1
+    return jumps.split(Regex("""[\s%+\-]+""")).maxBy { it.toInt() }!!.toInt()
 }
 
 /**
@@ -152,9 +151,9 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+\s((%+)?\+|(%+)?-|%+)(\s)?)*"""))) return -1
+    if (!jumps.matches(Regex("""(\d+\s[%+\-]+\s?)+"""))) return -1
     var resultNumber = -1
-    for (element in Regex("""\d+\s(%+)?\+""").findAll(jumps)) {
+    for (element in Regex("""\d+\s%*\+""").findAll(jumps)) {
         val number = element.value.filter { it in '0'..'9' }.toInt()
         if (resultNumber < number) resultNumber = number
     }
@@ -174,7 +173,8 @@ fun plusMinus(expression: String): Int {
     val e = IllegalArgumentException("class.java")
     if (!expression.matches(Regex("""(\d+(\s[-+]\s)?)+"""))) throw e
     return Regex("""(?<=-)\s(?=\d+)|(\+\s)""").replace(expression, "")
-            .split(" ").map { it.toInt() }.sumBy { it }
+            .split(" ")
+            .sumBy { it.toInt() }
 }
 
 
