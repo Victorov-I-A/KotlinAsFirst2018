@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import java.lang.Math.floor
 
 /**
  * Пример
@@ -300,4 +301,37 @@ fun romanToArab(c: Char): Int =
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    val exceptionArgue = IllegalArgumentException("class.java")
+    if (!commands.matches(Regex("""([<>+\-\s]*(\[(?=.*\]))*)+"""))) throw exceptionArgue
+    val exceptionState = IllegalStateException("class.java")           //Исключение для превышения возможного лимита <>
+    val resultList = mutableListOf<Int>()
+    for (i in 0 until cells) {                                         //Создаём список с ячейками
+        resultList.add(0)
+    }
+    try {
+        var varLimit = limit                                           //Динамический лимит операций
+        var i = floor(cells.toDouble() / 2).toInt()              //Начинаем со срединной ячейки
+        var j = 0                                                      //Индекс текущей операции
+        while (varLimit > 0) {
+            when (commands[j]) {
+                '>' -> i++
+                '<' -> i -= 1
+                '+' -> resultList[i]++
+                '-' -> resultList[i] -= 1
+                '[' -> if (resultList[i] == 0)
+                    j = commands.substring(j, commands.length - 1)
+                            .indexOfFirst { it == ']' }
+                ']' -> if (resultList[i] != 0)
+                    j = commands.substring(0, j)
+                            .indexOfLast { it == '[' }
+            }
+            varLimit -= 1
+            j++
+            if (j == commands.length) break
+        }
+    } catch (e: IllegalStateException) {
+        throw exceptionState
+    }
+    return resultList
+}
