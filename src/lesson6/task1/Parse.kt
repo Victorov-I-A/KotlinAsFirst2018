@@ -197,7 +197,7 @@ fun firstDuplicateIndex(str: String): Int {
     if (!str.matches(Regex("""((\S+\s)|((?<=\s)\S+)){2,}"""))) return -1
     var index = 0
     val list = str.split(" ")
-    for (i in 1 until list.size - 1) {
+    for (i in 1 until list.size) {
         if (list[i].toLowerCase() == list[i - 1].toLowerCase()) break
         else index += list[i - 1].length + 1
     }
@@ -220,7 +220,7 @@ fun mostExpensive(description: String): String {
     if (!description.matches(Regex("""([а-яА-ЯёЁ]+\s\d+(\.\d+)?(;\s)?)+"""))) return ""
     val list = description.split(Regex("""(;\s)|\s"""))
     val number = list.filter { it.toDoubleOrNull() != null }.maxBy { it.toDouble() }
-    for (i in 1..list.size step 2) {
+    for (i in 1 until list.size step 2) {
         if (list[i] == number) return list[i - 1]
     }
     return ""
@@ -237,7 +237,32 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    if (roman == "" || !roman.matches(Regex("""M*(CM)?D*(CD)?C*(XC)?L*(XL)?X*(IX)?V*(IV)*I*"""))) return -1
+    val list = listOf("CM" to 900, "CD" to 400, "XC" to 90, "XL" to 40, "IX" to 9, "IV" to 4)
+    var resultNumber = 0
+    list.forEach {
+        if (roman.contains(it.first)) {
+            roman.replace(it.first, "")
+            resultNumber += it.second
+        }
+    }
+    for (i in 0 until roman.length) {
+        resultNumber += romanToArab(roman[i])
+    }
+    return resultNumber
+}
+
+fun romanToArab(c: Char): Int =
+        when (c) {
+            'M' -> 1000
+            'D' -> 500
+            'C' -> 100
+            'L' -> 50
+            'X' -> 10
+            'V' -> 5
+            else -> 1
+        }
 
 /**
  * Очень сложная
