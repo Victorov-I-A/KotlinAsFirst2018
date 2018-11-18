@@ -72,7 +72,7 @@ fun main(args: Array<String>) {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    if (!str.matches(Regex("""\d{1,2}\s\S+\s(\d+)"""))) return ""
+    if (!str.matches(Regex("""\d{1,2}\s[а-яА-ЯёЁ]+\s(\d+)"""))) return ""
     val arrayOfMonths = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
             "сентября", "октября", "ноября", "декабря")
     val inputData = str.split(" ")
@@ -136,8 +136,10 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""([\s%\-]+)?(\d+[\s%\-]*)+"""))) return -1
-    return jumps.split(Regex("""[\s%+\-]+""")).maxBy { it.toInt() }!!.toInt()
+    if (!jumps.matches(Regex("""[\s%\-]*(\d+[\s%\-]*)+"""))) return -1
+    return jumps.trim { symbol -> symbol !in '0'..'9' }
+            .split(Regex("""[\s%+\-]+"""))
+            .maxBy { it.toInt() }!!.toInt()
 }
 
 /**
@@ -151,7 +153,11 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+\s[%+\-]+\s?)+"""))) return -1
+    if (!jumps.split(" ").all {
+                it.toIntOrNull() != null ||
+                        !it.matches(Regex("""%+""")) ||
+                        !it.matches(Regex("""%*[+-]"""))
+            }) return -1
     var resultNumber = -1
     for (element in Regex("""\d+\s%*\+""").findAll(jumps)) {
         val number = element.value.filter { it in '0'..'9' }.toInt()
@@ -188,14 +194,14 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    if (!str.matches(Regex("""(([а-яА-ЯёЁ]+(?=\s)|((?<=\s)[а-яА-ЯёЁ]+)){2,})"""))) return -1
-    var index = -1
+    if (!str.matches(Regex("""(([а-яА-ЯёЁ]+\s)|((?<=\s)[а-яА-ЯёЁ]+)){2,}"""))) return -1
+    var index = 0
     val list = str.split(" ")
     for (i in 1 until list.size - 1) {
         if (list[i].toLowerCase() == list[i - 1].toLowerCase()) break
-        else index += list[i].length + 1
+        else index += list[i - 1].length + 1
     }
-    return if (index == str.length) -1
+    return if (index == str.length + 1) -1
     else index
 }
 
