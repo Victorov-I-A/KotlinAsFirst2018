@@ -194,7 +194,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    if (!str.matches(Regex("""(([а-яА-ЯёЁ]+\s)|((?<=\s)[а-яА-ЯёЁ]+)){2,}"""))) return -1
+    if (!str.matches(Regex("""((\S+\s)|((?<=\s)\S+)){2,}"""))) return -1
     var index = 0
     val list = str.split(" ")
     for (i in 1 until list.size - 1) {
@@ -216,7 +216,15 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (!description.matches(Regex("""([а-яА-ЯёЁ]+\s\d+(\.\d+)?(;\s)?)+"""))) return ""
+    val list = description.split(Regex("""(;\s)|\s"""))
+    val number = list.filter { it.toDoubleOrNull() != null }.maxBy { it.toDouble() }
+    for (i in 1..list.size step 2) {
+        if (list[i] == number) return list[i - 1]
+    }
+    return ""
+}
 
 /**
  * Сложная
