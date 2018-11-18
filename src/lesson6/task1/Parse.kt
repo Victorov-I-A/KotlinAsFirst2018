@@ -201,7 +201,7 @@ fun firstDuplicateIndex(str: String): Int {
         if (list[i].toLowerCase() == list[i - 1].toLowerCase()) break
         else index += list[i - 1].length + 1
     }
-    return if (index == str.length + 1) -1
+    return if (index == str.length - 1) -1
     else index
 }
 
@@ -217,7 +217,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    if (!description.matches(Regex("""([а-яА-ЯёЁ]+\s\d+(\.\d+)?(;\s)?)+"""))) return ""
+    if (!description.matches(Regex("""(\S+\s\d+(\.\d+)?(;\s)?)+"""))) return ""
     val list = description.split(Regex("""(;\s)|\s"""))
     val number = list.filter { it.toDoubleOrNull() != null }.maxBy { it.toDouble() }
     for (i in 1 until list.size step 2) {
