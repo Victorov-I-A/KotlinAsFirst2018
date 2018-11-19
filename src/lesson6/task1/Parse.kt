@@ -303,9 +303,9 @@ fun romanToArab(c: Char): Int =
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    val exceptionArgue = IllegalArgumentException("class.java")
-    if (!commands.matches(Regex("""[<>+\-\s\[\]]+""")) || commands.count { it == '[' } != commands.count { it == ']' }) throw exceptionArgue
-    val exceptionState = IllegalStateException("class.java")           //Исключение для превышения возможного лимита <>
+    if (!commands.matches(Regex("""[<>+\-\s\[\]]+""")) ||
+            commands.count { it == '[' } != commands.count { it == ']' })
+        throw IllegalArgumentException()
     val resultList = mutableListOf<Int>()
     for (i in 0 until cells) {                                         //Создаём список с ячейками
         resultList.add(0)
@@ -313,7 +313,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     try {
         var varLimit = limit                                           //Динамический лимит операций
         var i = floor(cells.toDouble() / 2).toInt()                    //Начинаем со срединной ячейки
-        var j = 0                                                      //Индекс текущей операции
+        var j = 0                                                           //Индекс текущей операции
         while (varLimit > 0) {
             when (commands[j]) {
                 '>' -> i++
@@ -321,18 +321,38 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 '+' -> resultList[i]++
                 '-' -> resultList[i] -= 1
                 '[' -> if (resultList[i] == 0)
-                    j = commands.substring(j, commands.length - 1)
-                            .indexOfFirst { it == ']' }
+                    j = forBracketFirst(commands, j)
                 ']' -> if (resultList[i] != 0)
-                    j = commands.substring(0, j)
-                            .indexOfLast { it == '[' }
+                    j = forBracketSecond(commands, j)
             }
             varLimit -= 1
             j++
             if (j == commands.length) break
         }
     } catch (e: IllegalStateException) {
-        throw exceptionState
+        throw e
     }
     return resultList
+}
+
+fun forBracketFirst(str: String, index: Int): Int { //ищем индекс парной скобки для [
+    var j = 1
+    var i = index
+    do {
+        i++
+        if (str[i] == ']') j -= 1
+        if (str[i] == '[') j++
+    } while (j != 0)
+    return i
+}
+
+fun forBracketSecond(str: String, index: Int): Int { //ищем индекс парной скобки для ]
+    var j = -1
+    var i = index
+    do {
+        i -= 1
+        if (str[i] == ']') j -= 1
+        if (str[i] == '[') j++
+    } while (j != 0)
+    return i
 }
