@@ -302,7 +302,7 @@ fun romanToArab(c: Char): Int =
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    if (!commands.matches(Regex("""[<>+\-\s\[\]]+"""))) throw IllegalArgumentException()
+    if (!commands.matches(Regex("""[<>+\-\s\[\]]*"""))) throw IllegalArgumentException()
     var g = 0
     commands.forEach {
         if (it == '[') g++                                              //Поверяем циклы скобок на закрытость
