@@ -309,7 +309,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     val resultList = mutableListOf<Int>()
     for (i in 0 until cells) {                                         //Создаём список с ячейками
         resultList.add(0)
-    }t
+    }
     try {
         var varLimit = limit                                           //Динамический лимит операций
         var i = floor(cells.toDouble() / 2).toInt()              //Начинаем со срединной ячейки
