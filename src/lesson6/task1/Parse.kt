@@ -314,6 +314,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     for (i in 0 until cells) {                                     //Создаём список с ячейками
         resultList.add(0)
     }
+    if (commands.isEmpty()) return resultList                           //Если команд нет, возващаем пустой список
     var varLimit = limit                                           //Динамический лимит операций
     var i = floor(cells.toDouble() / 2).toInt()                    //Начинаем со срединной ячейки
     var j = 0                                                           //Индекс текущей операции
