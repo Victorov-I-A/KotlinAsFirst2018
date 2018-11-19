@@ -242,14 +242,15 @@ fun fromRoman(roman: String): Int {
     if (roman == "" || !roman.matches(Regex("""M*(CM)?D*(CD)?C*(XC)?L*(XL)?X*(IX)?V*(IV)*I*"""))) return -1
     val list = listOf("CM" to 900, "CD" to 400, "XC" to 90, "XL" to 40, "IX" to 9, "IV" to 4)
     var resultNumber = 0
+    var mutRoman = roman
     list.forEach {
         if (roman.contains(it.first)) {
-            roman.replace(it.first, "")
+            mutRoman = mutRoman.replace(it.first, "")
             resultNumber += it.second
         }
     }
-    for (i in 0 until roman.length) {
-        resultNumber += romanToArab(roman[i])
+    for (i in 0 until mutRoman.length) {
+        resultNumber += romanToArab(mutRoman[i])
     }
     return resultNumber
 }
