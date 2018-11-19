@@ -304,7 +304,7 @@ fun romanToArab(c: Char): Int =
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     val exceptionArgue = IllegalArgumentException("class.java")
-    if (!commands.matches(Regex("""([<>+\-\s]*(\[(?=.*\]))*)+"""))) throw exceptionArgue
+    if (!commands.matches(Regex("""[<>+\-\s\[\]]+""")) || commands.count { it == '[' } != commands.count { it == ']' }) throw exceptionArgue
     val exceptionState = IllegalStateException("class.java")           //Исключение для превышения возможного лимита <>
     val resultList = mutableListOf<Int>()
     for (i in 0 until cells) {                                         //Создаём список с ячейками
@@ -312,7 +312,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     }
     try {
         var varLimit = limit                                           //Динамический лимит операций
-        var i = floor(cells.toDouble() / 2).toInt()              //Начинаем со срединной ячейки
+        var i = floor(cells.toDouble() / 2).toInt()                    //Начинаем со срединной ячейки
         var j = 0                                                      //Индекс текущей операции
         while (varLimit > 0) {
             when (commands[j]) {
