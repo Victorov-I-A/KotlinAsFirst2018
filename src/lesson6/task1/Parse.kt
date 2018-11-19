@@ -177,8 +177,7 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val e = IllegalArgumentException("class.java")
-    if (!expression.matches(Regex("""(\d+(\s[-+]\s)?)+"""))) throw e
+    if (!expression.matches(Regex("""(\d+(\s[-+]\s)?)+"""))) throw IllegalArgumentException()
     return Regex("""(?<=-)\s(?=\d+)|(\+\s)""").replace(expression, "")
             .split(" ")
             .sumBy { it.toInt() }
@@ -303,39 +302,42 @@ fun romanToArab(c: Char): Int =
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    if (!commands.matches(Regex("""[<>+\-\s\[\]]+""")) ||
-            commands.count { it == '[' } != commands.count { it == ']' })
-        throw IllegalArgumentException()
+    if (!commands.matches(Regex("""[<>+\-\s\[\]]+"""))) throw IllegalArgumentException()
+    var g = 0
+    commands.forEach {
+        if (it == '[') g++                                              //Поверяем циклы скобок на закрытость
+        if (it == ']') g--
+        if (g < 0) throw IllegalArgumentException()
+    }
+    if (g != 0) throw IllegalArgumentException()
     val resultList = mutableListOf<Int>()
-    for (i in 0 until cells) {                                         //Создаём список с ячейками
+    for (i in 0 until cells) {                                     //Создаём список с ячейками
         resultList.add(0)
     }
-    try {
-        var varLimit = limit                                           //Динамический лимит операций
-        var i = floor(cells.toDouble() / 2).toInt()                    //Начинаем со срединной ячейки
-        var j = 0                                                           //Индекс текущей операции
-        while (varLimit > 0) {
-            when (commands[j]) {
-                '>' -> i++
-                '<' -> i -= 1
-                '+' -> resultList[i]++
-                '-' -> resultList[i] -= 1
-                '[' -> if (resultList[i] == 0)
-                    j = forBracketFirst(commands, j)
-                ']' -> if (resultList[i] != 0)
-                    j = forBracketSecond(commands, j)
-            }
-            varLimit -= 1
-            j++
-            if (j == commands.length) break
+    var varLimit = limit                                           //Динамический лимит операций
+    var i = floor(cells.toDouble() / 2).toInt()                    //Начинаем со срединной ячейки
+    var j = 0                                                           //Индекс текущей операции
+    while (varLimit > 0) {
+        when (commands[j]) {
+            '>' -> i++
+            '<' -> i -= 1
+            '+' -> resultList[i]++
+            '-' -> resultList[i] -= 1
+            '[' -> if (resultList[i] == 0)
+                j = forBracketFirst(commands, j)
+            ']' -> if (resultList[i] != 0)
+                j = forBracketSecond(commands, j)
         }
-    } catch (e: IllegalStateException) {
-        throw e
+        if (i == cells || i < 0) throw IllegalStateException()          //Поверяем выход за пределы списка с ячейками
+        varLimit -= 1
+        j++
+        if (j == commands.length) break                                 //Преываем, если выполнены все команды
     }
+
     return resultList
 }
 
-fun forBracketFirst(str: String, index: Int): Int { //ищем индекс парной скобки для [
+fun forBracketFirst(str: String, index: Int): Int {                     //ищем индекс парной скобки для [
     var j = 1
     var i = index
     do {
@@ -346,7 +348,7 @@ fun forBracketFirst(str: String, index: Int): Int { //ищем индекс па
     return i
 }
 
-fun forBracketSecond(str: String, index: Int): Int { //ищем индекс парной скобки для ]
+fun forBracketSecond(str: String, index: Int): Int {                    //ищем индекс парной скобки для ]
     var j = -1
     var i = index
     do {
