@@ -79,9 +79,8 @@ fun dateStrToDigit(str: String): String {
     val inputData = str.split(" ")
     val day = inputData[0].toInt()
     val year = inputData[2].toInt()
-    if (!arrayOfMonths.contains(inputData[1])) return ""
     val month = arrayOfMonths.indexOfFirst { it == inputData[1] } + 1
-    if (day !in 1..daysInMonth(month, year)) return ""
+    if (month == 0 || day !in 1..daysInMonth(month, year)) return ""
     return String.format("%02d.%02d.%d", day, month, year)
 }
 
@@ -161,7 +160,7 @@ fun bestHighJump(jumps: String): Int {
             }) return -1
     var resultNumber = -1
     for (element in Regex("""\d+\s%*\+""").findAll(jumps)) {
-        val number = element.value.filter { it in '0'..'9' }.toInt()
+        val number = element.value.split(" ").first().toInt()
         if (resultNumber < number) resultNumber = number
     }
     return resultNumber
@@ -198,11 +197,10 @@ fun firstDuplicateIndex(str: String): Int {
     var index = 0
     val list = str.split(" ")
     for (i in 1 until list.size) {
-        if (list[i].toLowerCase() == list[i - 1].toLowerCase()) break
+        if (list[i].toLowerCase() == list[i - 1].toLowerCase()) return index
         else index += list[i - 1].length + 1
     }
-    return if (index == str.length - 1) -1
-    else index
+    return -1
 }
 
 /**
@@ -218,12 +216,17 @@ fun firstDuplicateIndex(str: String): Int {
  */
 fun mostExpensive(description: String): String {
     if (!description.matches(Regex("""(\S+\s\d+(\.\d+)?(;\s)?)+"""))) return ""
-    val list = description.split(Regex("""(;\s)|\s"""))
-    val number = list.filter { it.toDoubleOrNull() != null }.maxBy { it.toDouble() }
-    for (i in 1 until list.size step 2) {
-        if (list[i] == number) return list[i - 1]
-    }
-    return ""
+    var maxPrice = -1.0
+    var product = ""
+    description.split(Regex("""(;\s)|\s"""))
+            .chunked(2)
+            .forEach {
+                if (it.component2().toDouble() > maxPrice) {
+                    product = it.component1()
+                    maxPrice = it.component2().toDouble()
+                }
+            }
+    return product
 }
 
 /**
@@ -248,8 +251,8 @@ fun fromRoman(roman: String): Int {
             resultNumber += it.second
         }
     }
-    for (i in 0 until mutRoman.length) {
-        resultNumber += romanToArab(mutRoman[i])
+    mutRoman.forEach {
+        resultNumber += romanToArab(it)
     }
     return resultNumber
 }
