@@ -110,13 +110,19 @@ fun centerFile(inputName: String, outputName: String) {
     val listOfLine = File(inputName).readLines()
     val maxLength = listOfLine.max()!!.trim().length
 
-    File(outputName).bufferedWriter().use {
-        for (line in listOfLine) {
-            val newLine = line.trim()
-            val length = newLine.length
+    try {
+        File(outputName).bufferedWriter().use {
+            for (line in listOfLine) {
+                val newLine = line.trim()
+                val length = newLine.length
 
-            it.write(newLine.padStart(length + (maxLength - length) / 2, ' '))
-            it.newLine()
+                it.write(newLine.padStart(length + (maxLength - length) / 2, ' '))
+                it.newLine()
+            }
+        }
+    } catch (e: KotlinNullPointerException) {
+        File(outputName).bufferedWriter().use {
+            it.write("")
         }
     }
 }
