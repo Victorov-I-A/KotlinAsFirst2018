@@ -107,8 +107,10 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    val listOfLine = File(inputName).readLines().map { it.trim() }
-    val maxLength = listOfLine.map { it.length }.max() ?: 0
+    val listOfLine = File(inputName).readLines()
+            .map { it.trim() }
+    val maxLength = listOfLine.map { it.length }
+            .max() ?: 0
 
     File(outputName).bufferedWriter().use {
         for (line in listOfLine) {
@@ -170,7 +172,21 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val text = File(inputName).readText().trim()
+
+    return if (text.isEmpty())
+        mapOf()
+    else
+        text.split(Regex("""([^а-яА-ЯёЁa-zA-Z])+"""))
+                .groupingBy { it.toLowerCase() }
+                .eachCount()
+                .toList()
+                .sortedByDescending { it.second }
+                .take(20)
+                .toMap()
+
+}
 
 /**
  * Средняя
