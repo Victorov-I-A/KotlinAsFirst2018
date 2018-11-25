@@ -84,9 +84,8 @@ fun sibilants(inputName: String, outputName: String) {
     CHAR_CHANGE.forEach {
         text = (Regex("""(?<=[жЖчЧшШщЩ])${it.component1()}""").replace(text, it.component2()))
     }
-    File(outputName).bufferedWriter().use {
-        it.write(text)
-    }
+
+    File(outputName).writeText(text)
 }
 
 /**
@@ -113,7 +112,7 @@ fun centerFile(inputName: String, outputName: String) {
             .max() ?: 0
 
     File(outputName).bufferedWriter().use {
-        for (line in listOfLine) {
+        listOfLine.forEach { line ->
             val length = line.length
 
             it.write(line.padStart(length + (maxLength - length) / 2, ' '))
@@ -174,12 +173,12 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  */
 fun top20Words(inputName: String): Map<String, Int> {
     val text = File(inputName).readText()
-            .trim { it -> Regex("""([^а-яА-ЯёЁa-zA-Z])+""").matches("$it") }
+            .trim { it -> Regex("""[^а-яёa-z]+""", RegexOption.IGNORE_CASE).matches("$it") }
 
     return if (text.isEmpty())
         mapOf()
     else
-        text.split(Regex("""([^а-яА-ЯёЁa-zA-Z])+"""))
+        text.split(Regex("""[^а-яёa-z]+""", RegexOption.IGNORE_CASE))
                 .groupingBy { it.toLowerCase() }
                 .eachCount()
                 .toList()
@@ -225,7 +224,18 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    var text = File(inputName).readText()
+
+    dictionary.forEach { (key, value) ->
+        val lowValue = value.toLowerCase()
+        val charToStr = key.toString()
+
+        text = text.replace(charToStr.toLowerCase(), lowValue)
+        if (Regex("""[А-ЯЁA-Z]""").matches("${key.toUpperCase()}"))
+            text = text.replace(charToStr.toUpperCase(), lowValue.capitalize())
+    }
+
+    File(outputName).writeText(text)
 }
 
 /**
