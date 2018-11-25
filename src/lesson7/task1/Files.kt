@@ -107,25 +107,19 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    val listOfLine = File(inputName).readLines()
-    val maxLength = listOfLine.max()!!.trim().length
+    val listOfLine = File(inputName).readLines().map { it.trim() }
+    val maxLength = listOfLine.map { it.length }.max() ?: 0
 
-    try {
-        File(outputName).bufferedWriter().use {
-            for (line in listOfLine) {
-                val newLine = line.trim()
-                val length = newLine.length
+    File(outputName).bufferedWriter().use {
+        for (line in listOfLine) {
+            val length = line.length
 
-                it.write(newLine.padStart(length + (maxLength - length) / 2, ' '))
-                it.newLine()
-            }
-        }
-    } catch (e: KotlinNullPointerException) {
-        File(outputName).bufferedWriter().use {
-            it.write("")
+            it.write(line.padStart(length + (maxLength - length) / 2, ' '))
+            it.newLine()
         }
     }
 }
+
 
 /**
  * Сложная
