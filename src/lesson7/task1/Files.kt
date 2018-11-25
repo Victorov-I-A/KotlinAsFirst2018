@@ -173,7 +173,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  *
  */
 fun top20Words(inputName: String): Map<String, Int> {
-    val text = File(inputName).readText().trim()
+    val text = File(inputName).readText()
+            .trim { it -> Regex("""([^а-яА-ЯёЁa-zA-Z])+""").matches("$it") }
 
     return if (text.isEmpty())
         mapOf()
