@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.lang.StringBuilder
 
 /**
  * Пример
@@ -53,13 +54,22 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
+fun itCount(inputName: String, str: String): Int {
+    val text = File(inputName).readText()
+    var j = 0
+    for (i in 0 until text.length) {
+        try {
+            if (Regex(str, RegexOption.IGNORE_CASE).matches(text.substring(i, i + str.length)))
+                j++
+        } catch (e: StringIndexOutOfBoundsException) {
+            return j
+        }
+    }
+    return j
+}
+
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> =
-        substrings.associateBy({ it },
-                {
-                    Regex(it, RegexOption.IGNORE_CASE).findAll(File(inputName).readText())
-                            .toList().size
-                }
-        )
+        substrings.associateBy({ it }, { itCount(inputName, it) })
 
 
 /**
@@ -224,18 +234,25 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    var text = File(inputName).readText()
+    val str = StringBuilder()
+    val map = mutableMapOf<Char, String>()
 
     dictionary.forEach { (key, value) ->
-        val lowValue = value.toLowerCase()
-        val charToStr = key.toString()
+        val newValue = value.toLowerCase()
 
-        text = text.replace(charToStr.toLowerCase(), lowValue)
-        if (Regex("""[А-ЯЁA-Z]""").matches("${key.toUpperCase()}"))
-            text = text.replace(charToStr.toUpperCase(), lowValue.capitalize())
+        map[key.toLowerCase()] = newValue
+        if (Regex("""[а-яА-ЯёЁa-zA-Z]""").matches("$key"))
+            map[key.toUpperCase()] = newValue.capitalize()
     }
 
-    File(outputName).writeText(text)
+    val keys = map.keys
+
+    for (char in File(inputName).readText()) {
+        if (char in keys) str.append(map[char])
+        else str.append(char)
+    }
+
+    File(outputName).writeText("$str")
 }
 
 /**
@@ -263,15 +280,15 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    val list = mutableListOf<String>()
+    val list = File(inputName).readText()
+            .split("\r\n")
+            .filter { it.toLowerCase().length == it.toLowerCase().toSet().size }
+    val maxLength = list.map { it.length }
+            .max()
 
-    File(inputName).readLines().forEach { word ->
-        if (word.toLowerCase().length == word.toLowerCase().toSet().size)
-            list.add(word)
-    }
-    File(outputName).writeText(list
-            .filter { it.length == list.max()!!.length }
-            .joinToString(separator = ", ")
+    File(outputName).writeText(
+            list.filter { it.length == maxLength }
+                    .joinToString(separator = ", ")
     )
 }
 
@@ -300,7 +317,6 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
  * Пример входного файла:
 Lorem ipsum *dolor sit amet*, consectetur **adipiscing** elit.
 Vestibulum lobortis, ~~Est vehicula rutrum *suscipit*~~, ipsum ~~lib~~ero *placerat **tortor***,
-
 Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * Соответствующий выходной файл:
@@ -403,10 +419,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 </li>
 <li>Помидоры</li>
 <li>
+Фрукты
+<ol>
+<li>Бананы</li>
+<li>
 Яблоки
 <ol>
 <li>Красные</li>
 <li>Зелёные</li>
+</ol>
+</li>
 </ol>
 </li>
 </ul>
@@ -477,7 +499,6 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 -132
 ----
 3
-
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
