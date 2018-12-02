@@ -2,6 +2,8 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
+import lesson3.task1.revert
 import java.io.File
 import java.lang.StringBuilder
 
@@ -515,7 +517,39 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val listOfStr = mutableListOf(lhv.toString() //Создаём список для будущих строк выходного файла
+            .padStart(digitNumber(lhv) + digitNumber(rhv), ' ')
+    )
+    //Добавляем в список первые три строки (множители и дефисы)
+    listOfStr.add(
+            "*" + rhv.toString().padStart(
+                    digitNumber(rhv) + lhv.toString().length - 1, ' '
+            )
+    )
+
+    val def = "".padEnd(listOfStr[0].length, '-')
+
+    listOfStr.add(def)
+    //Добавляем в список строки с порязрядными произведениями
+    "$rhv".reversed().forEachIndexed { index, digit ->
+        val number = "${lhv * "$digit".toInt()}"
+
+        if (index == 0)
+            listOfStr.add(number.padStart(listOfStr[0].length, ' '))
+        else
+            listOfStr.add("+" + number.padStart(number.length + digitNumber(rhv / 10) - index, ' '))
+    }
+    //Добавляем с список дефисы и финальное произведение
+    listOfStr.add(def)
+    listOfStr.add("${lhv * rhv}".padStart(listOfStr[0].length, ' '))
+    //Переписываем строки из списка в файл
+    listOfStr.forEach {
+        writer.write(it)
+        writer.newLine()
+    }
+
+    writer.close()
 }
 
 
