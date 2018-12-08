@@ -533,7 +533,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         if (index == 0)
             listOfStr.add(number.padStart(lengthOfLines + 1, ' '))
         else
-            listOfStr.add("+" + number.padStart(number.length + digitNumber(rhv / 10) - index, ' '))
+            listOfStr.add("+" + number.padStart(lengthOfLines - index, ' '))
     }
 
     listOfStr.add(def) //Добавляем с список дефисы и финальное произведение
