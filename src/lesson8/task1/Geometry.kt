@@ -119,8 +119,8 @@ fun diameter(vararg points: Point): Segment {
     val xMin = points.filter { it.x == points.minBy { point -> point.x }!!.x }
             .minBy { it.y }!!
 
-    return arrayOf(Segment(xMax, xMin), Segment(yMax, yMin))
-            .maxBy { it.begin.distance(it.end) }!!
+    return if (xMax.distance(xMin) > yMax.distance(yMin)) Segment(xMax, xMin)
+    else Segment(yMax, yMin)
 }
 
 /**
