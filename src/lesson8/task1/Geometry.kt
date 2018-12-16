@@ -110,10 +110,17 @@ data class Segment(val begin: Point, val end: Point) {
 fun diameter(vararg points: Point): Segment {
     if (points.size < 2) throw IllegalArgumentException()
 
-    return arrayOf(
-            Segment(points.maxBy { it.x }!!, points.minBy { it.x }!!),
-            Segment(points.maxBy { it.y }!!, points.minBy { it.y }!!)
-    ).maxBy { it.begin.distance(it.end) }!!
+    val yMax = points.filter { it.y == points.maxBy { point -> point.y }!!.y }
+            .minBy { it.x }!!
+    val xMax = points.filter { it.x == points.maxBy { point -> point.x }!!.x }
+            .maxBy { it.y }!!
+    val yMin = points.filter { it.y == points.minBy { point -> point.y }!!.y }
+            .maxBy { it.x }!!
+    val xMin = points.filter { it.x == points.minBy { point -> point.x }!!.x }
+            .minBy { it.y }!!
+
+    return arrayOf(Segment(xMax, xMin), Segment(yMax, yMin))
+            .maxBy { it.begin.distance(it.end) }!!
 }
 
 /**
