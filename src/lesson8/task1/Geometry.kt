@@ -110,18 +110,9 @@ data class Segment(val begin: Point, val end: Point) {
 fun diameter(vararg points: Point): Segment {
     if (points.size < 2) throw IllegalArgumentException()
 
-    val xMax = points.maxBy { it.x }!!
-    val yMax = points.maxBy { it.y }!!
-    val xMin = points.minBy { it.x }!!
-    val yMin = points.minBy { it.y }!!
-
     return arrayOf(
-            Segment(xMax, xMin),
-            Segment(yMax, yMin),
-            Segment(xMax, yMin),
-            Segment(yMax, xMin),
-            Segment(xMax, yMax),
-            Segment(xMin, yMin)
+            Segment(points.maxBy { it.x }!!, points.minBy { it.x }!!),
+            Segment(points.maxBy { it.y }!!, points.minBy { it.y }!!)
     ).maxBy { it.begin.distance(it.end) }!!
 }
 
