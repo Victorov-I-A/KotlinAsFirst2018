@@ -110,17 +110,17 @@ data class Segment(val begin: Point, val end: Point) {
 fun diameter(vararg points: Point): Segment {
     if (points.size < 2) throw IllegalArgumentException()
 
-    val yMax = points.filter { it.y == points.maxBy { point -> point.y }!!.y }
+    val leftMax = points.filter { point -> point.y == points.maxBy { it.y }!!.y }
             .minBy { it.x }!!
-    val xMax = points.filter { it.x == points.maxBy { point -> point.x }!!.x }
+    val rightMax = points.filter { point -> point.x == points.maxBy { it.x }!!.x }
             .maxBy { it.y }!!
-    val yMin = points.filter { it.y == points.minBy { point -> point.y }!!.y }
+    val rightMin = points.filter { point -> point.y == points.minBy { it.y }!!.y }
             .maxBy { it.x }!!
-    val xMin = points.filter { it.x == points.minBy { point -> point.x }!!.x }
+    val leftMin = points.filter { point -> point.x == points.minBy { it.x }!!.x }
             .minBy { it.y }!!
 
-    return if (xMax.distance(xMin) > yMax.distance(yMin)) Segment(xMax, xMin)
-    else Segment(yMax, yMin)
+    return if (rightMax.distance(leftMin) > leftMax.distance(rightMin)) Segment(rightMax, leftMin)
+    else Segment(leftMax, rightMin)
 }
 
 /**
@@ -179,14 +179,21 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line =
+        Line(
+                s.end,
+                acos(
+                        s.begin.distance(Point(s.end.x, s.begin.y)) / s.begin.distance(s.end)
+                )
+        )
+
 
 /**
  * Средняя
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
 
 /**
  * Сложная
